@@ -9,7 +9,7 @@ export async function handleExecuteCode(params: ExecuteCodeInput) {
 
   return {
     content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
-    structuredContent: result,
+    structuredContent: { ...result },
     isError: !!result.error,
   };
 }
