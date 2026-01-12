@@ -107,6 +107,7 @@ describe("execute_code integration", () => {
 
     it("should handle unknown tool calls gracefully", async () => {
       // Calling an unknown tool shouldn't crash - just returns MCP error
+      // Note: First call may be slow due to lazy MCP client connection
       const result = await executeCode(`
         const response = await context7.nonexistent_tool({});
         console.log(JSON.stringify(response));
@@ -114,7 +115,7 @@ describe("execute_code integration", () => {
       // MCP SDK returns error in response, doesn't throw
       // The key is that execution completes without crashing
       expect(result.logs.length).toBeGreaterThanOrEqual(0);
-    });
+    }, 30000); // 30s timeout for MCP connection
   });
 
   describe("security", () => {
