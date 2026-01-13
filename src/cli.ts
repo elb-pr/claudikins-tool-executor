@@ -66,7 +66,38 @@ program
 
     writeFileSync(configPath, JSON.stringify(defaultConfig, null, 2));
     console.log("✅ Created tool-executor.config.json");
-    console.log("   Edit this file to add your MCP servers, then run: npm run extract");
+    console.log("   Edit this file to add your MCP servers, then run: tool-executor extract");
+  });
+
+program
+  .command("extract")
+  .description("Extract tool schemas from MCP servers into registry")
+  .option("-a, --all", "Extract from all configured servers")
+  .action(async (options) => {
+    if (!options.all) {
+      console.log("Usage: tool-executor extract --all");
+      console.log("\nExtracts tool schemas from all configured MCP servers");
+      console.log("and generates YAML files in the registry/ directory.");
+      return;
+    }
+
+    console.log("🔧 Extracting schemas from MCP servers...\n");
+
+    // Run the extract script via tsx
+    const scriptPath = resolve(process.cwd(), "scripts/extract-schemas.ts");
+    if (!existsSync(scriptPath)) {
+      console.error("❌ Extract script not found at scripts/extract-schemas.ts");
+      console.error("   Make sure you're in the tool-executor-mcp directory");
+      process.exit(1);
+    }
+
+    try {
+      execSync(`npx tsx ${scriptPath}`, { stdio: "inherit" });
+      console.log("\n✨ Extraction complete");
+    } catch (error) {
+      console.error("\n❌ Extraction failed");
+      process.exit(1);
+    }
   });
 
 program.parse();
