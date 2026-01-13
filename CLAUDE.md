@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Status
 
-**Complete** - Core implementation done, 26/26 tests passing.
+**Complete** - Core implementation done, 43/43 tests passing.
 
 ## What This Is
 
