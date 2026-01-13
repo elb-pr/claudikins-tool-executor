@@ -61,8 +61,14 @@ async function cleanupMcpResults(maxAgeMs: number = 3600000): Promise<number> {
     }
 
     return deleted;
-  } catch {
-    return 0; // Directory doesn't exist or other error
+  } catch (err) {
+    // ENOENT is expected if directory doesn't exist yet
+    if ((err as NodeJS.ErrnoException).code === "ENOENT") {
+      return 0;
+    }
+    // Log unexpected errors (permissions, disk full, etc.)
+    console.error("cleanupMcpResults failed:", err);
+    return 0;
   }
 }
 
@@ -146,8 +152,13 @@ export const workspace = {
       const fullPath = resolvePath(path);
       await fsStat(fullPath);
       return true;
-    } catch {
-      return false;
+    } catch (err) {
+      // ENOENT means file doesn't exist - expected
+      if ((err as NodeJS.ErrnoException).code === "ENOENT") {
+        return false;
+      }
+      // Rethrow unexpected errors (permissions, etc.)
+      throw err;
     }
   },
 

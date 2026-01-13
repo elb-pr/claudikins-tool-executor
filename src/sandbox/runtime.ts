@@ -60,16 +60,27 @@ function createClientProxy(name: keyof MCPClients): Record<string, (args: Record
             // Auto-save large responses to workspace
             const filename = `${Date.now()}-${name}-${toolName}.json`;
             const filepath = `${MCP_RESULTS_DIR}/${filename}`;
-            await workspace.mkdir(MCP_RESULTS_DIR);
-            await workspace.writeJSON(filepath, result);
 
-            // Return reference with preview
-            return {
-              _savedTo: filepath,
-              _size: serialised.length,
-              _preview: serialised.slice(0, 200) + "...",
-              _hint: `Full result saved to workspace. Use workspace.readJSON("${filepath}") to access.`,
-            };
+            try {
+              await workspace.mkdir(MCP_RESULTS_DIR);
+              await workspace.writeJSON(filepath, result);
+
+              // Return reference with preview
+              return {
+                _savedTo: filepath,
+                _size: serialised.length,
+                _preview: serialised.slice(0, 200) + "...",
+                _hint: `Full result saved to workspace. Use workspace.readJSON("${filepath}") to access.`,
+              };
+            } catch (saveErr) {
+              // If save fails, return truncated result with warning
+              console.error(`Failed to auto-save large result: ${saveErr}`);
+              return {
+                _warning: "Result too large to auto-save, returning truncated",
+                _size: serialised.length,
+                _preview: serialised.slice(0, 1000),
+              };
+            }
           }
 
           return result;
