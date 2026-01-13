@@ -82,7 +82,7 @@ export interface SearchResponse {
 /**
  * Load a tool definition from a YAML file
  */
-async function loadToolDefinition(filePath: string): Promise<ToolDefinition | null> {
+export async function loadToolDefinition(filePath: string): Promise<ToolDefinition | null> {
   try {
     const content = await readFile(filePath, "utf-8");
     const parsed = yaml.load(content) as ToolDefinition;
