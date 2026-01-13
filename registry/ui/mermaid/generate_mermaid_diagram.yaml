@@ -49,8 +49,21 @@ inputSchema:
     - mermaid
   $schema: http://json-schema.org/draft-07/schema#
 example: |-
+  // Flowchart with decision branching
   await mermaid["generate_mermaid_diagram"]({
-    mermaid: "<mermaid>",
-    theme: "<theme>",
-    backgroundColor: "<backgroundColor>"
+    mermaid: "graph TD; A[Start] --> B{Decision}; B -->|Yes| C[Do X]; B -->|No| D[Do Y]; C --> E[End]; D --> E",
+    theme: "default"
+  });
+
+  // Sequence diagram with dark theme
+  await mermaid["generate_mermaid_diagram"]({
+    mermaid: "sequenceDiagram; Alice->>Bob: Hello Bob; Bob-->>Alice: Hi Alice; Alice->>Bob: How are you?",
+    theme: "dark",
+    outputType: "svg_url"
+  });
+
+  // Class diagram saved to file
+  await mermaid["generate_mermaid_diagram"]({
+    mermaid: "classDiagram; class Animal { +String name; +speak() }; class Dog; Dog --|> Animal",
+    outputType: "file"
   });

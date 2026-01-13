@@ -101,8 +101,28 @@ inputSchema:
     - totalThoughts
   $schema: http://json-schema.org/draft-07/schema#
 example: |-
+  // Start a reasoning chain for architecture decision
   await sequentialThinking["sequentialthinking"]({
-    thought: "<thought>",
+    thought: "I need to decide between REST and GraphQL for our API. Let me first consider the data requirements.",
     nextThoughtNeeded: true,
-    thoughtNumber: 0
+    thoughtNumber: 1,
+    totalThoughts: 5
+  });
+
+  // Continue the chain with analysis
+  await sequentialThinking["sequentialthinking"]({
+    thought: "Our clients need flexible queries with nested data. GraphQL would reduce over-fetching.",
+    nextThoughtNeeded: true,
+    thoughtNumber: 2,
+    totalThoughts: 5
+  });
+
+  // Revise a previous thought if needed
+  await sequentialThinking["sequentialthinking"]({
+    thought: "Actually, I should reconsider - our team has no GraphQL experience. REST might be faster to ship.",
+    nextThoughtNeeded: true,
+    thoughtNumber: 3,
+    totalThoughts: 5,
+    isRevision: true,
+    revisesThought: 2
   });

@@ -30,8 +30,22 @@ inputSchema:
   additionalProperties: false
   $schema: http://json-schema.org/draft-07/schema#
 example: |-
+  // Quick question with fast model
   await gemini["gemini-query"]({
-    prompt: "<prompt>",
-    model: "<model>",
-    thinkingLevel: "<thinkingLevel>"
+    prompt: "What is the capital of France?",
+    model: "flash",
+    thinkingLevel: "minimal"
+  });
+
+  // Complex analysis with deep reasoning
+  await gemini["gemini-query"]({
+    prompt: "Analyse the trade-offs between microservices and monolithic architecture for a startup",
+    model: "pro",
+    thinkingLevel: "high"
+  });
+
+  // Code review request
+  await gemini["gemini-query"]({
+    prompt: "Review this function for potential bugs and suggest improvements: function add(a,b){return a+b}",
+    model: "pro"
   });

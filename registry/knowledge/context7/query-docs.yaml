@@ -35,7 +35,20 @@ inputSchema:
   additionalProperties: false
   $schema: http://json-schema.org/draft-07/schema#
 example: |-
+  // Query Next.js documentation
   await context7["query-docs"]({
-    libraryId: "<libraryId>",
-    query: "<query>"
+    libraryId: "/vercel/next.js",
+    query: "How to set up API routes with middleware"
+  });
+
+  // Get React hooks examples
+  await context7["query-docs"]({
+    libraryId: "/facebook/react",
+    query: "useEffect cleanup function best practices"
+  });
+
+  // Query specific library version
+  await context7["query-docs"]({
+    libraryId: "/supabase/supabase",
+    query: "How to implement row-level security policies"
   });

@@ -98,8 +98,23 @@ inputSchema:
     - substring_pattern
   title: applyArguments
 example: |-
+  // Find all TODO comments with context
   await serena["search_for_pattern"]({
-    substring_pattern: "<substring_pattern>",
-    context_lines_before: 0,
-    context_lines_after: 0
+    substring_pattern: "TODO:",
+    context_lines_before: 1,
+    context_lines_after: 2
+  });
+
+  // Search for function definitions in TypeScript files
+  await serena["search_for_pattern"]({
+    substring_pattern: "async function",
+    paths_include_glob: "**/*.ts",
+    restrict_search_to_code_files: true
+  });
+
+  // Find API endpoints in a specific directory
+  await serena["search_for_pattern"]({
+    substring_pattern: "router\\.(get|post|put|delete)",
+    relative_path: "src/routes",
+    context_lines_after: 3
   });
