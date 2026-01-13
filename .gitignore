@@ -28,3 +28,4 @@ coverage/
 
 # Workspace (runtime state)
 workspace/
+.claude/settings.local.json
