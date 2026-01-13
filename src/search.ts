@@ -127,12 +127,18 @@ async function searchWithSerena(query: string, limit: number): Promise<SearchRes
       return null;
     }
 
-    // Convert query to flexible regex: "generate image" → "generate.*image"
-    // This allows matching across word boundaries, underscores, etc.
-    const pattern = query
+    // Convert query to flexible regex with lookaheads for ANY order matching
+    // "generate image banana" → "(?=.*generate)(?=.*image)(?=.*banana)"
+    // This matches files containing ALL terms regardless of order
+    const terms = query
       .split(/\s+/)
-      .map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) // escape regex chars
-      .join('.*');
+      .map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')); // escape regex chars
+
+    // Use lookaheads so terms can appear in any order
+    // Single term: just use it directly. Multiple terms: use lookaheads
+    const pattern = terms.length === 1
+      ? terms[0]
+      : terms.map(t => `(?=.*${t})`).join('') + '.*';
 
     // Use Serena's search_for_pattern to find matches in registry
     // relative_path is "." since registry project is already activated
