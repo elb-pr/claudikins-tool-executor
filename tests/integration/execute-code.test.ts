@@ -113,8 +113,8 @@ describe("execute_code integration", () => {
         console.log(JSON.stringify(response));
       `);
       // MCP SDK returns error in response, doesn't throw
-      // The key is that execution completes without crashing
-      expect(result.logs.length).toBeGreaterThanOrEqual(0);
+      // Execution should complete without crashing
+      expect(result.error).toBeUndefined();
     }, 30000); // 30s timeout for MCP connection
   });
 
@@ -152,16 +152,23 @@ describe("execute_code integration", () => {
     });
 
     it("should auto-save large MCP responses to workspace", async () => {
-      // This test requires an MCP that returns large responses
-      // Skip if no suitable MCP available
+      // Context7 resolve_library_id returns >500 chars, triggering auto-save
       const result = await executeCode(`
-        // Simulate checking if auto-save works
-        // In real usage, a large MCP response triggers this
-        const mockLargeResult = { _savedTo: "test", _hint: "test" };
-        console.log(typeof mockLargeResult._savedTo);
+        const response = await context7.resolve_library_id({ libraryName: "react" });
+        console.log(JSON.stringify(response));
       `);
 
       expect(result.error).toBeUndefined();
-    });
+      expect(result.logs.length).toBeGreaterThan(0);
+
+      // Response should be auto-saved reference (if >500 chars) or raw data (if small)
+      const log = result.logs[0] as { _savedTo?: string; _size?: number };
+      if (log._savedTo) {
+        // Auto-save triggered - verify reference structure
+        expect(log._savedTo).toContain("mcp-results/");
+        expect(log._size).toBeGreaterThan(500);
+      }
+      // If no _savedTo, response was small enough - still valid
+    }, 30000); // 30s for MCP connection
   });
 });

@@ -27,18 +27,6 @@ function resolvePath(relativePath: string): string {
 }
 
 /**
- * Ensure the MCP results directory exists and return path for new result
- */
-async function getNextMcpResultPath(): Promise<string> {
-  const dir = join(WORKSPACE_ROOT, MCP_RESULTS_DIR);
-  await fsMkdir(dir, { recursive: true });
-
-  const timestamp = Date.now();
-  const filename = `${timestamp}.json`;
-  return join(MCP_RESULTS_DIR, filename);
-}
-
-/**
  * Clean up old MCP results (older than maxAge ms)
  * Default: 1 hour (3600000ms)
  */
@@ -176,7 +164,6 @@ export const workspace = {
 
   // MCP results management
 
-  getNextMcpResultPath,
   cleanupMcpResults,
 };
 

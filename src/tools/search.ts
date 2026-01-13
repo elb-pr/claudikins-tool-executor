@@ -14,8 +14,14 @@ export async function handleSearchTools(params: SearchToolsInput) {
       description: r.tool.description,
       example: r.tool.example,
     })),
+    // Pagination metadata (MCP best practice)
+    count: response.results.length,
+    limit: params.limit,
+    has_more: response.results.length === params.limit,
+    // Source info
     source: response.source,
-    suggestion: response.suggestion,
+    ...(response.fallbackReason && { fallbackReason: response.fallbackReason }),
+    ...(response.suggestion && { suggestion: response.suggestion }),
   };
 
   return {
