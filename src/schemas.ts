@@ -13,6 +13,11 @@ export const SearchToolsInputSchema = z.object({
     .max(50)
     .default(10)
     .describe("Maximum results to return (default: 10)"),
+  offset: z.number()
+    .int()
+    .min(0)
+    .default(0)
+    .describe("Number of results to skip for pagination (default: 0)"),
 }).strict();
 
 export type SearchToolsInput = z.infer<typeof SearchToolsInputSchema>;

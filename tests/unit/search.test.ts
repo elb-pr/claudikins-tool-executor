@@ -56,5 +56,26 @@ describe("search module", () => {
         expect(result.tool.description).toBeDefined();
       }
     });
+
+    it("should respect offset parameter for pagination", async () => {
+      const page1 = await searchTools("gemini", 2, 0);
+      const page2 = await searchTools("gemini", 2, 2);
+
+      // Both should have results
+      expect(page1.results.length).toBeGreaterThan(0);
+      expect(page1.totalCount).toBeDefined();
+
+      // If there are enough results, page 2 should be different
+      if (page1.totalCount && page1.totalCount > 2 && page2.results.length > 0) {
+        expect(page1.results[0].tool.name).not.toBe(page2.results[0].tool.name);
+      }
+    });
+
+    it("should include totalCount in response", async () => {
+      const response = await searchTools("gemini", 5, 0);
+
+      expect(response.totalCount).toBeDefined();
+      expect(typeof response.totalCount).toBe("number");
+    });
   });
 });

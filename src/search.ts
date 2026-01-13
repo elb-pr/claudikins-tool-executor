@@ -75,6 +75,7 @@ export interface SearchResult {
 export interface SearchResponse {
   results: SearchResult[];
   source: "serena" | "local";
+  totalCount?: number;
   suggestion?: string;
   fallbackReason?: string;
 }
@@ -214,19 +215,28 @@ async function searchLocally(query: string, limit: number): Promise<SearchResult
 /**
  * Search for tools matching a query
  */
-export async function searchTools(query: string, limit = 10): Promise<SearchResponse> {
+export async function searchTools(
+  query: string,
+  limit = 10,
+  offset = 0
+): Promise<SearchResponse> {
+  // Request more results to support pagination
+  const fetchLimit = offset + limit;
+
   // Try Serena first
-  const serenaResults = await searchWithSerena(query, limit);
+  const serenaResults = await searchWithSerena(query, fetchLimit);
 
   if (serenaResults && serenaResults.length > 0) {
+    const paginatedResults = serenaResults.slice(offset, offset + limit);
     return {
-      results: serenaResults,
+      results: paginatedResults,
       source: "serena",
+      totalCount: serenaResults.length,
     };
   }
 
   // Fall back to local search
-  const localResults = await searchLocally(query, limit);
+  const localResults = await searchLocally(query, fetchLimit);
   const fallbackReason = serenaResults === null
     ? "Serena unavailable - using text search"
     : "No semantic matches - using text search";
@@ -235,14 +245,17 @@ export async function searchTools(query: string, limit = 10): Promise<SearchResp
     return {
       results: [],
       source: "local",
+      totalCount: 0,
       fallbackReason,
       suggestion: "Try broader terms like 'image', 'code search', 'diagram', or browse categories: game-dev, knowledge, ai-models, web, ui",
     };
   }
 
+  const paginatedResults = localResults.slice(offset, offset + limit);
   return {
-    results: localResults,
+    results: paginatedResults,
     source: "local",
+    totalCount: localResults.length,
     fallbackReason,
   };
 }

@@ -5,7 +5,7 @@ import type { SearchToolsInput } from "../schemas.js";
  * Search for MCP tools across all wrapped servers
  */
 export async function handleSearchTools(params: SearchToolsInput) {
-  const response: SearchResponse = await searchTools(params.query, params.limit);
+  const response: SearchResponse = await searchTools(params.query, params.limit, params.offset);
 
   const output = {
     results: response.results.map((r) => ({
@@ -17,7 +17,9 @@ export async function handleSearchTools(params: SearchToolsInput) {
     // Pagination metadata (MCP best practice)
     count: response.results.length,
     limit: params.limit,
-    has_more: response.results.length === params.limit,
+    offset: params.offset,
+    totalCount: response.totalCount,
+    has_more: (params.offset + response.results.length) < (response.totalCount || 0),
     // Source info
     source: response.source,
     ...(response.fallbackReason && { fallbackReason: response.fallbackReason }),
