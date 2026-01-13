@@ -6,6 +6,7 @@ import yaml from "js-yaml";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { ToolDefinition } from "./types.js";
+import { initBM25, searchBM25, isBM25Ready } from "./bm25.js";
 
 // Absolute path to registry, relative to this module (not cwd)
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -167,13 +168,51 @@ async function searchWithSerena(query: string, limit: number): Promise<SearchRes
 }
 
 /**
+ * Load all tools for BM25 indexing
+ */
+async function loadAllTools(): Promise<ToolDefinition[]> {
+  const files = await glob("**/*.{yaml,yml}", {
+    cwd: REGISTRY_ROOT,
+    absolute: true,
+  });
+
+  const tools: ToolDefinition[] = [];
+  for (const file of files) {
+    const tool = await loadToolDefinition(file);
+    if (tool) tools.push(tool);
+  }
+  return tools;
+}
+
+/**
  * Search tools using local glob + text matching (fallback)
  */
 async function searchLocally(query: string, limit: number): Promise<SearchResult[]> {
+  // Try BM25 first (better ranking)
+  if (!isBM25Ready()) {
+    try {
+      const allTools = await loadAllTools();
+      initBM25(allTools);
+      console.error(`BM25 index built with ${allTools.length} tools`);
+    } catch (error) {
+      console.error("Failed to initialize BM25:", error);
+    }
+  }
+
+  if (isBM25Ready()) {
+    const bm25Results = searchBM25(query, limit);
+    if (bm25Results.length > 0) {
+      return bm25Results.map((tool, idx) => ({
+        tool,
+        score: 1 - (idx * 0.01), // Decreasing score for ranking
+      }));
+    }
+  }
+
+  // Fall back to simple text matching
   const queryLower = query.toLowerCase();
   const queryTerms = queryLower.split(/\s+/).filter(Boolean);
 
-  // Find all YAML files in registry
   const files = await glob("**/*.{yaml,yml}", {
     cwd: REGISTRY_ROOT,
     absolute: true,
