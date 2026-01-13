@@ -39,6 +39,34 @@ async function getNextMcpResultPath(): Promise<string> {
 }
 
 /**
+ * Clean up old MCP results (older than maxAge ms)
+ * Default: 1 hour (3600000ms)
+ */
+async function cleanupMcpResults(maxAgeMs: number = 3600000): Promise<number> {
+  const dir = join(WORKSPACE_ROOT, MCP_RESULTS_DIR);
+
+  try {
+    const files = await readdir(dir);
+    const now = Date.now();
+    let deleted = 0;
+
+    for (const file of files) {
+      const filepath = join(dir, file);
+      const stats = await fsStat(filepath);
+
+      if (now - stats.mtimeMs > maxAgeMs) {
+        await unlink(filepath);
+        deleted++;
+      }
+    }
+
+    return deleted;
+  } catch {
+    return 0; // Directory doesn't exist or other error
+  }
+}
+
+/**
  * Workspace API - all file operations scoped to ./workspace/
  */
 export const workspace = {
@@ -138,6 +166,7 @@ export const workspace = {
   // MCP results management
 
   getNextMcpResultPath,
+  cleanupMcpResults,
 };
 
 export type Workspace = typeof workspace;
