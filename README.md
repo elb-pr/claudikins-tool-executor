@@ -267,6 +267,7 @@ You can manually create these files or use `npm run extract` to generate them au
 - **Dual Serena** — One instance powers `search_tools`, another is available in the sandbox. Keeps tool discovery separate from your code analysis
 - **Proxy Pattern** — MCP clients exposed as `clientName.toolName(args)` in sandbox
 - **Workspace API** — Persistent file storage between executions via `workspace.*`
+- **Context-Efficient** — Large MCP responses auto-saved to disk; see [Context-Efficient Pattern](docs/context-efficient-pattern.md)
 
 ## Development
 
