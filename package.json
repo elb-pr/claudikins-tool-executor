@@ -1,11 +1,35 @@
 {
   "name": "tool-executor-mcp-server",
   "version": "1.0.0",
+  "description": "MCP server that wraps multiple MCP servers into a single context-efficient interface",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
     "tool-executor": "./dist/cli.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aMilkStack/tool-executor-mcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "claude",
+    "anthropic",
+    "tool-executor",
+    "context-efficient",
+    "model-context-protocol"
+  ],
+  "author": "Ethan Lee",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aMilkStack/tool-executor-mcp/issues"
+  },
+  "homepage": "https://github.com/aMilkStack/tool-executor-mcp#readme",
+  "files": [
+    "dist",
+    "registry",
+    "tool-executor.config.example.json"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
