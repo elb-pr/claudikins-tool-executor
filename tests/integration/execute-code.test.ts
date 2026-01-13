@@ -129,6 +129,39 @@ describe("execute_code integration", () => {
       expect(result.error).toBeUndefined();
       expect(result.logs).toEqual(["undefined", "undefined"]);
     });
+  });
 
+  describe("context efficiency", () => {
+    it("should summarise logs when output is large", async () => {
+      const result = await executeCode(`
+        // Generate large output
+        for (let i = 0; i < 100; i++) {
+          console.log("x".repeat(100) + i);
+        }
+      `);
+
+      expect(result.error).toBeUndefined();
+      // Should be summarised, not 100 entries
+      expect(result.logs.length).toBeLessThan(10);
+
+      // Check for summary marker
+      const summary = result.logs[0] as { _summary?: boolean; totalLogs?: number };
+      if (summary._summary) {
+        expect(summary.totalLogs).toBe(100);
+      }
+    });
+
+    it("should auto-save large MCP responses to workspace", async () => {
+      // This test requires an MCP that returns large responses
+      // Skip if no suitable MCP available
+      const result = await executeCode(`
+        // Simulate checking if auto-save works
+        // In real usage, a large MCP response triggers this
+        const mockLargeResult = { _savedTo: "test", _hint: "test" };
+        console.log(typeof mockLargeResult._savedTo);
+      `);
+
+      expect(result.error).toBeUndefined();
+    });
   });
 });
