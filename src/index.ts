@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { MAX_LOG_CHARS } from "./constants.js";
 
 import {
   SearchToolsInputSchema,
@@ -82,31 +83,31 @@ server.registerTool(
   "execute_code",
   {
     title: "Execute Code",
-    description: `Execute TypeScript/JavaScript code with access to all MCP clients and workspace helpers.
+    description: `Execute TypeScript/JavaScript code with access to MCP clients and workspace.
 
-**Available MCP clients (call as async functions):**
-${clientList}
-
-**Workspace API (file operations scoped to ./workspace/):**
-- workspace.read(path), workspace.write(path, data)
-- workspace.readJSON(path), workspace.writeJSON(path, data)
-- workspace.list(path), workspace.glob(pattern)
-- workspace.exists(path), workspace.mkdir(path)
-
-**Example:**
+**IMPORTANT: Context-Efficient Pattern**
+MCP tool responses are auto-saved to workspace when large. Your code receives a reference:
 \`\`\`typescript
-// Search code with Serena
-const result = await serena.search_for_pattern({
-  substring_pattern: "handleError",
-  relative_path: "src"
-});
-console.log(result);
-
-// Save data to workspace
-await workspace.writeJSON("results.json", result);
+const result = await mermaid.generate_diagram({...});
+// If large: { _savedTo: "mcp-results/123.json", _preview: "..." }
+// Read full result: await workspace.readJSON(result._savedTo)
 \`\`\`
 
-Code runs in a sandbox. Results are returned as logs array.`,
+**Available MCP clients:**
+${clientList}
+
+**Workspace API:**
+- workspace.write(path, data) / workspace.read(path)
+- workspace.writeJSON(path, obj) / workspace.readJSON(path)
+- workspace.list(path) / workspace.exists(path)
+
+**Best Practice:** Save outputs to workspace, return minimal confirmation:
+\`\`\`typescript
+await workspace.writeJSON("analysis.json", results);
+console.log("Saved analysis.json");  // Minimal context cost
+\`\`\`
+
+Results are summarised if console.log output exceeds ${MAX_LOG_CHARS} chars.`,
     inputSchema: ExecuteCodeInputSchema,
     annotations: {
       readOnlyHint: false,
