@@ -2,9 +2,32 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { getClient, logMcpCall, SERVER_CONFIGS } from "./clients.js";
 import { workspace } from "./workspace.js";
 import { ExecutionResult, MCPClients } from "../types.js";
-import { MAX_LOG_ENTRY_CHARS, MCP_RESULTS_DIR } from "../constants.js";
+import { MAX_LOG_CHARS, MAX_LOG_ENTRY_CHARS, MCP_RESULTS_DIR } from "../constants.js";
 
 const DEFAULT_TIMEOUT = 30_000; // 30 seconds
+
+/**
+ * Summarise logs to prevent context bloat
+ */
+function summariseLogs(logs: unknown[]): unknown[] {
+  const serialised = JSON.stringify(logs);
+
+  if (serialised.length <= MAX_LOG_CHARS) {
+    return logs;
+  }
+
+  // Return summary with count and preview
+  return [
+    {
+      _summary: true,
+      totalLogs: logs.length,
+      totalChars: serialised.length,
+      limit: MAX_LOG_CHARS,
+      preview: logs.slice(0, 3),
+      hint: "Use workspace.write() to save large outputs, then read on demand.",
+    },
+  ];
+}
 
 /**
  * Create a proxy that wraps an MCP client's tool calls
@@ -148,13 +171,13 @@ export async function executeCode(
       logs.push({ returned: result });
     }
 
-    return { logs };
+    return { logs: summariseLogs(logs) };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const stack = error instanceof Error ? error.stack : undefined;
 
     return {
-      logs,
+      logs: summariseLogs(logs),
       error: errorMessage,
       stack,
     };
