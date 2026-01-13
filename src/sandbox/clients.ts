@@ -1,13 +1,14 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { MCPClients, ServerConfig, ClientState, AuditLogEntry } from "../types.js";
+import { loadConfig } from "../config.js";
 
 const IDLE_TIMEOUT = 3 * 60 * 1000; // 3 minutes
 
 /**
- * MCP server configurations - 9 working servers
+ * Default MCP server configurations (used when no config file found)
  */
-export const SERVER_CONFIGS: ServerConfig[] = [
+const DEFAULT_CONFIGS: ServerConfig[] = [
   // NPX servers (Node.js)
   { name: "notebooklm", displayName: "NotebookLM", command: "npx", args: ["-y", "notebooklm-mcp"] },
   { name: "sequentialThinking", displayName: "Sequential Thinking", command: "npx", args: ["-y", "@modelcontextprotocol/server-sequential-thinking"] },
@@ -21,6 +22,32 @@ export const SERVER_CONFIGS: ServerConfig[] = [
   { name: "serena", displayName: "Serena", command: "uvx", args: ["--from", "git+https://github.com/oraios/serena", "serena", "start-mcp-server"] },
   { name: "nanoBanana", displayName: "Nano Banana", command: "uvx", args: ["nanobanana-mcp-server@latest"], env: { GEMINI_API_KEY: process.env.GEMINI_API_KEY || "" } },
 ];
+
+/**
+ * Load server configs from file or use defaults
+ */
+function loadServerConfigs(): ServerConfig[] {
+  const config = loadConfig();
+
+  if (config) {
+    console.error(`Loaded config with ${config.servers.length} servers`);
+    return config.servers.map(s => ({
+      name: s.name as keyof MCPClients,
+      displayName: s.displayName,
+      command: s.command,
+      args: s.args,
+      env: s.env,
+    }));
+  }
+
+  console.error("No config file found, using default servers");
+  return DEFAULT_CONFIGS;
+}
+
+/**
+ * MCP server configurations - loaded from config file or defaults
+ */
+export const SERVER_CONFIGS: ServerConfig[] = loadServerConfigs();
 
 /**
  * Client state tracking for lazy loading and lifecycle management
