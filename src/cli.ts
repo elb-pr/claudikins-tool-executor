@@ -1,15 +1,20 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-import { existsSync } from "fs";
-import { resolve } from "path";
+import { existsSync, readFileSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 import { execSync } from "child_process";
+
+// Read version from package.json
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const packageJson = JSON.parse(readFileSync(resolve(__dirname, "..", "package.json"), "utf-8"));
 
 const program = new Command();
 
 program
   .name("tool-executor")
   .description("CLI for tool-executor-mcp-server")
-  .version("1.0.0");
+  .version(packageJson.version);
 
 program
   .command("doctor")

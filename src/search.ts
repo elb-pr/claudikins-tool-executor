@@ -16,20 +16,37 @@ const REGISTRY_ROOT = resolve(__dirname, "..", "registry");
  * Dedicated Serena client for registry search (separate from sandbox)
  */
 let registrySerena: Client | null = null;
-let registrySerenaConnecting = false;
+
+/**
+ * Track in-flight connection promise to avoid duplicate connections
+ */
+let connectionPromise: Promise<Client | null> | null = null;
 
 /**
  * Get or create the registry Serena client
  */
 async function getRegistrySerena(): Promise<Client | null> {
+  // Already connected
   if (registrySerena) return registrySerena;
-  if (registrySerenaConnecting) {
-    // Wait for existing connection attempt
-    await new Promise(r => setTimeout(r, 100));
-    return registrySerena;
+
+  // Connection already in progress - wait for it
+  if (connectionPromise) {
+    return connectionPromise;
   }
 
-  registrySerenaConnecting = true;
+  // Start new connection
+  connectionPromise = connectRegistrySerena();
+  try {
+    return await connectionPromise;
+  } finally {
+    connectionPromise = null;
+  }
+}
+
+/**
+ * Internal connection logic for registry Serena
+ */
+async function connectRegistrySerena(): Promise<Client | null> {
   try {
     const client = new Client(
       { name: "tool-executor-registry-search", version: "1.0.0" },
@@ -56,8 +73,6 @@ async function getRegistrySerena(): Promise<Client | null> {
   } catch (error) {
     console.error("Failed to connect registry Serena:", error);
     return null;
-  } finally {
-    registrySerenaConnecting = false;
   }
 }
 

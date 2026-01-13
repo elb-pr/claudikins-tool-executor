@@ -24,6 +24,35 @@ const CONFIG_FILENAMES = [
   ".tool-executorrc.json",
 ];
 
+/**
+ * Expand ${VAR} syntax in a string using process.env
+ */
+function expandEnvVars(value: string): string {
+  return value.replace(/\$\{([^}]+)\}/g, (_, varName) => {
+    return process.env[varName] || "";
+  });
+}
+
+/**
+ * Recursively expand env vars in an object
+ */
+function expandEnvVarsInObject(obj: unknown): unknown {
+  if (typeof obj === "string") {
+    return expandEnvVars(obj);
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(expandEnvVarsInObject);
+  }
+  if (obj !== null && typeof obj === "object") {
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(obj)) {
+      result[key] = expandEnvVarsInObject(value);
+    }
+    return result;
+  }
+  return obj;
+}
+
 export function findConfigFile(startDir: string = process.cwd()): string | null {
   for (const filename of CONFIG_FILENAMES) {
     const filepath = resolve(startDir, filename);
@@ -44,7 +73,8 @@ export function loadConfig(configPath?: string): ToolExecutorConfig | null {
   try {
     const content = readFileSync(filepath, "utf-8");
     const parsed = JSON.parse(content);
-    return ToolExecutorConfigSchema.parse(parsed);
+    const expanded = expandEnvVarsInObject(parsed);
+    return ToolExecutorConfigSchema.parse(expanded);
   } catch (error) {
     console.error(`Failed to load config from ${filepath}:`, error);
     return null;

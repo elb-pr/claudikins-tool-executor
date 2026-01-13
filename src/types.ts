@@ -2,9 +2,9 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 
 /**
  * MCP client connections - null means not connected (lazy loading)
+ * NOTE: Extend this interface when adding new servers to DEFAULT_CONFIGS
  */
 export interface MCPClients {
-  godot: Client | null;
   serena: Client | null;
   context7: Client | null;
   notebooklm: Client | null;
@@ -13,9 +13,7 @@ export interface MCPClients {
   gemini: Client | null;
   apify: Client | null;
   sequentialThinking: Client | null;
-  stackoverflow: Client | null;
   nanoBanana: Client | null;
-  mcpRunPython: Client | null;
 }
 
 /**
