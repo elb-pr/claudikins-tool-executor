@@ -1,9 +1,6 @@
 # Dependencies
 node_modules/
 
-# Build output
-dist/
-
 # Environment variables (NEVER commit)
 .env
 .env.local
@@ -26,6 +23,16 @@ npm-debug.log*
 # Test coverage
 coverage/
 
-# Workspace (runtime state)
-workspace/
-.claude/settings.local.json
+# Local dev files (keep locally, don't ship)
+.claude/
+src/
+scripts/
+tests/
+tsconfig.json
+CLAUDE.md
+SPEC.md
+docs/
+
+# Workspace runtime (keep .gitkeep)
+workspace/*
+!workspace/.gitkeep
