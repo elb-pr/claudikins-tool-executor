@@ -1,6 +1,18 @@
 {
-  "description": "Enforces MCP tool discovery before defaulting to basic tools",
+  "description": "Enforces MCP tool discovery and provides usage guidance",
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "UserPromptSubmit": [
       {
         "matcher": "*",
