@@ -1,0 +1,50 @@
+{
+  "name": "wink-bm25-text-search",
+  "version": "3.1.2",
+  "description": "Configurable BM25 Text Search Engine with simple semantic search support",
+  "keywords": [
+    "BM25",
+    "BM25F",
+    "TFIDF",
+    "TF-IDF",
+    "In Memory Search",
+    "Semantic Search",
+    "Full Text Search",
+    "NLP",
+    "Natural Language Processing",
+    "wink"
+  ],
+  "main": "src/wink-bm25-text-search.js",
+  "scripts": {
+    "pretest": "npm run lint",
+    "test": "nyc --reporter=html --reporter=text mocha ./test/",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "sourcedocs": "docker -i src -o ./sourcedocs --sidebar no",
+    "lint": "eslint ./src/*.js ./test/*.js ./runkit/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winkjs/wink-bm25-text-search.git"
+  },
+  "author": "Sanjaya Kumar Saxena",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/winkjs/wink-bm25-text-search/issues"
+  },
+  "homepage": "http://winkjs.org/",
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "coveralls": "^3.1.1",
+    "docker": "^1.0.0",
+    "eslint": "^8.25.0",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0"
+  },
+  "dependencies": {
+    "wink-eng-lite-web-model": "^1.4.3",
+    "wink-helpers": "^2.0.0",
+    "wink-nlp": "^1.12.2",
+    "wink-nlp-utils": "^2.0.4"
+  },
+  "runkitExampleFilename": "runkit/example.js"
+}

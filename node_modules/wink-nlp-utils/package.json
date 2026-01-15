@@ -1,0 +1,56 @@
+{
+  "name": "wink-nlp-utils",
+  "version": "2.1.0",
+  "description": "NLP Functions for amplifying negations, managing elisions, creating ngrams, stems, phonetic codes to tokens and more.",
+  "keywords": [
+    "Tokenize",
+    "Stem",
+    "NGrams",
+    "Bag of Words",
+    "Phonetize",
+    "Soundex",
+    "Stop Words",
+    "Sentence Breaking",
+    "Regex",
+    "NLP",
+    "Natural Language Processing"
+  ],
+  "main": "src/wink-nlp-utils.js",
+  "scripts": {
+    "pretest": "npm run lint && npm run docs",
+    "test": "nyc --reporter=html --reporter=text mocha ./test/",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "sourcedocs": "docker -i src -o ./sourcedocs --sidebar no",
+    "docs": "jsdoc src/*.js -c .jsdoc.json",
+    "lint": "eslint ./src/*.js ./test/*.js ./runkit/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winkjs/wink-nlp-utils.git"
+  },
+  "author": "Sanjaya Kumar Saxena",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/winkjs/wink-nlp-utils/issues"
+  },
+  "homepage": "http://winkjs.org/",
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "coveralls": "^3.1.1",
+    "docdash": "github:winkjs/docdash",
+    "docker": "^1.0.0",
+    "eslint": "^8.25.0",
+    "jsdoc": "^3.6.11",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0"
+  },
+  "dependencies": {
+    "wink-distance": "^2.0.1",
+    "wink-eng-lite-web-model": "^1.4.3",
+    "wink-helpers": "^2.0.0",
+    "wink-nlp": "^1.12.0",
+    "wink-porter2-stemmer": "^2.0.1",
+    "wink-tokenizer": "^5.2.3"
+  },
+  "runkitExampleFilename": "./runkit/example.js"
+}

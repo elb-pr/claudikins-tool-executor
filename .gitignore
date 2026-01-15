@@ -1,5 +1,5 @@
 # Dependencies
-node_modules/
+# node_modules/ - committed for plugin distribution
 
 # Environment variables (NEVER commit)
 .env

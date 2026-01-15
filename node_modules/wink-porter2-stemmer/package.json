@@ -1,0 +1,43 @@
+{
+  "name": "wink-porter2-stemmer",
+  "version": "2.0.1",
+  "description": "Implementation of Porter Stemmer Algorithm V2 by Dr Martin F Porter",
+  "keywords": [
+    "Stem",
+    "Stemmer",
+    "Porter Stemmer V2",
+    "NLP",
+    "Natural Language Processing",
+    "wink"
+  ],
+  "main": "src/wink-porter2-stemmer.js",
+  "scripts": {
+    "pretest": "npm run lint && npm run readmedocs",
+    "test": "istanbul cover _mocha ./test/",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "docs": "docker -i src -o docs --sidebar no",
+    "readmedocs": "documentation readme src/*.js --section=API",
+    "lint": "eslint ./src/*.js ./test/*.js ./runkit/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winkjs/wink-porter2-stemmer.git"
+  },
+  "author": "Sanjaya Kumar Saxena",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/winkjs/wink-porter2-stemmer/issues"
+  },
+  "homepage": "https://github.com/winkjs/wink-porter2-stemmer#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.5",
+    "docker": "^1.0.0",
+    "documentation": "^12.0.2",
+    "eslint": "^6.0.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^6.2.0",
+    "mocha-lcov-reporter": "^1.3.0"
+  },
+  "runkitExampleFilename": "./runkit/example.js"
+}

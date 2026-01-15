@@ -1,0 +1,47 @@
+{
+  "name": "wink-jaro-distance",
+  "version": "2.0.0",
+  "description": "An Implementation of Jaro Distance Algorithm by Matthew A. Jaro",
+  "keywords": [
+    "Jaro",
+    "Jaro Distance",
+    "Jaro Similarity",
+    "String Matching",
+    "String Similarity",
+    "NLP",
+    "Natural Language Processing",
+    "Similarity",
+    "wink"
+  ],
+  "main": "src/wink-jaro-distance.js",
+  "scripts": {
+    "pretest": "npm run lint && npm run readmedocs",
+    "test": "istanbul cover _mocha ./test/",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+    "docs": "docker -i src -o docs --sidebar no",
+    "readmedocs": "documentation readme src/*.js --section=API",
+    "lint": "eslint ./src/*.js ./test/*.js ./runkit/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winkjs/wink-jaro-distance.git"
+  },
+  "author": "Sanjaya Kumar Saxena",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/winkjs/wink-jaro-distance/issues"
+  },
+  "homepage": "http://winkjs.org/",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.2",
+    "docco": "^0.8.0",
+    "docker": "^1.0.0",
+    "documentation": "^8.1.2",
+    "eslint": "^5.8.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^5.2.0",
+    "mocha-lcov-reporter": "^1.3.0"
+  },
+  "runkitExampleFilename": "runkit/example.js"
+}

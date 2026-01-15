@@ -1,0 +1,58 @@
+{
+  "name": "wink-distance",
+  "version": "2.0.2",
+  "description": "Distance/Similarity functions for Bag of Words, Strings, Numbers, Dates and Vectors.",
+  "keywords": [
+    "Distance",
+    "Similarity",
+    "NLP",
+    "Bag of Words",
+    "Strings",
+    "Vectors",
+    "Chebyshev",
+    "Cosine",
+    "Hamming",
+    "Jaccard",
+    "Jaro",
+    "Manhattan",
+    "Soundex",
+    "Tversky",
+    "Taxicab",
+    "wink",
+    "winkJS"
+  ],
+  "main": "src/wink-distance.js",
+  "scripts": {
+    "pretest": "npm run lint && npm run docs",
+    "test": "nyc --reporter=html --reporter=text mocha ./test/",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "sourcedocs": "docker -i src -o ./sourcedocs --sidebar yes",
+    "docs": "jsdoc src/*.js -c .jsdoc.json",
+    "lint": "eslint ./src/*.js ./test/*.js ./runkit/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winkjs/wink-distance.git"
+  },
+  "author": "Sanjaya Kumar Saxena",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/winkjs/wink-distance/issues"
+  },
+  "homepage": "http://winkjs.org/",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "coveralls": "^3.1.1",
+    "docdash": "github:winkjs/docdash",
+    "docker": "^1.0.0",
+    "eslint": "^8.31.0",
+    "jsdoc": "^3.5.5",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0"
+  },
+  "runkitExampleFilename": "./runkit/example.js",
+  "dependencies": {
+    "wink-helpers": "^2.0.0",
+    "wink-jaro-distance": "^2.0.0"
+  }
+}
