@@ -24,14 +24,14 @@ npm-debug.log*
 coverage/
 
 # Local dev files (keep locally, don't ship)
-.claude/
-src/
-scripts/
-tests/
-tsconfig.json
-CLAUDE.md
-SPEC.md
-docs/
+/.claude/
+/src/
+/scripts/
+/tests/
+/tsconfig.json
+/CLAUDE.md
+/SPEC.md
+/docs/
 
 # Workspace runtime (keep .gitkeep)
 workspace/*
