@@ -3,6 +3,8 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Claude-D97757?style=flat-square&logo=claude&logoColor=white" alt="Claude">
+  <img src="https://img.shields.io/badge/Gemini-8E75B2?style=flat-square&logo=google%20gemini&logoColor=white" alt="Google Gemini">
   <a href="https://github.com/aMilkStack/claudikins-tool-executor/commits/main"><img src="https://img.shields.io/github/last-commit/aMilkStack/claudikins-tool-executor?style=flat-square" alt="Last Commit"></a>
   <img src="https://img.shields.io/badge/node-18%2B-brightgreen?style=flat-square" alt="Node.js 18+">
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License">
