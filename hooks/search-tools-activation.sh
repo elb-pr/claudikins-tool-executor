@@ -61,7 +61,9 @@ ESCAPED=$(echo "$MESSAGE" | python3 -c 'import json,sys; print(json.dumps(sys.st
 cat <<EOF
 {
   "continue": true,
-  "suppressOutput": true,
-  "systemMessage": $ESCAPED
+  "hookSpecificOutput": {
+    "hookEventName": "UserPromptSubmit",
+    "additionalContext": $ESCAPED
+  }
 }
 EOF
