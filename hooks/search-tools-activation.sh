@@ -61,7 +61,7 @@ ESCAPED=$(echo "$MESSAGE" | python3 -c 'import json,sys; print(json.dumps(sys.st
 cat <<EOF
 {
   "continue": true,
-  "suppressOutput": false,
+  "suppressOutput": true,
   "systemMessage": $ESCAPED
 }
 EOF
